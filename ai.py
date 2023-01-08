@@ -98,7 +98,7 @@ class AI:
         copy.perform_move(best_move)
         if (copy.is_check(pcs)):
             invalid_moves.append(best_move)
-            return AI.get_ai_move(Sphereboard, invalid_moves,alg_no)
+            return AI.get_ai_move(Sphereboard, invalid_moves,alg_no, game_type)
 
         return best_move
 

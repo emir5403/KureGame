@@ -7,6 +7,9 @@ class Board:
 
     def __init__(self, Spherepieces):
         self.Spherepieces = Spherepieces
+        self.RPeated = 0
+        self.PPeated = 0
+        self.trans_table = {}
 
 
     @classmethod
@@ -79,6 +82,12 @@ class Board:
         if (not self.in_bounds(x, y)):
             return 0
         else:
+            eaten = self.Spherepieces[x][y].color
+            if eaten == "R":
+                self.RPeated += 1
+            elif eaten == "P":
+                self.PPeated += 1
+
             self.Spherepieces[x][y] = 0
 
     def in_bounds(self, x, y):

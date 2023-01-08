@@ -167,6 +167,7 @@ elif game_type == '1':
          
              board.perform_move(ai_move2)
              print("alfa-beta AI move: " + ai_move2.to_string())
+             print("RP = ", board.RPeated, "PP = ", board.PPeated)
              print(board.to_string())
          elif inp == 'Q':
              print("QUIT") 

@@ -129,9 +129,91 @@ class Sphere(Piece):
         else:
             return self.y == 8 - 2
 
+    #Save board state and move to the transposition table if not present.
+    #If same action taken previously, deny the move.
+    def checkTransposition(self, board, move):
+        
+        if tuple([board.to_string(), move.to_string()]) in board.trans_table:
+            return False
+        else:
+            board.trans_table[tuple([board.to_string(), move.to_string()])] = True
+        return True
+
+    #Check if there will be 4 of the same color pieces linearly, horizontally or diagonally after the movement
+    def check4alignment(self, board, mMove):
+
+        count = 1
+        if isinstance(mMove, int):
+            return False
+
+        x = mMove.xto
+        y = mMove.yto
+
+        for i in range(0, 6):
+            piece = board.get_piece(x, i)
+            if (piece != 0):
+                if (piece.color == self.color):
+                    count += 1
+        
+        if count >= 4:
+            return False
+        else:
+            count = 1
+
+        for i in range(0, 6):
+            piece = board.get_piece(i, y)
+            if (piece != 0):
+                if (piece.color == self.color):
+                    count += 1
+        
+        if count >= 4:
+            return False
+        else:
+            count = 1
+
+        for i in range(0, 6):
+            if x + i < 7 and y + i < 7:
+                piece = board.get_piece(x+i, y+i)
+                if (piece != 0):
+                    if (piece.color == self.color):
+                        count += 1
+
+            if x - i >= 0 and y - i >= 0:
+                piece = board.get_piece(x-i, y-i)
+                if (piece != 0):
+                    if (piece.color == self.color):
+                        count += 1
+        
+        if count >= 4:
+            return False
+        else:
+            count = 1
+
+        for i in range(0, 6):
+            if x - i >= 0 and y + i < 7:
+                piece = board.get_piece(x-i, y+i)
+                if (piece != 0):
+                    if (piece.color == self.color):
+                        count += 1
+
+            if x + i < 7 and y - i >= 0:
+                piece = board.get_piece(x+i, y-i)
+                if (piece != 0):
+                    if (piece.color == self.color):
+                        count += 1
+
+        if count >= 4:
+            return False
+        
+        return True
+
     def get_possible_moves(self, board):
         moves = []
+
+        ############
         # Direction the piece can move in.
+        #     x+1  x-1  x
+        #     y+1, y-1, y
         direction = -1
         ref = 6
         if (self.color == Piece.RED):
@@ -140,22 +222,43 @@ class Sphere(Piece):
 
         # The general 1 step forward move.
         if (board.get_piece(self.x, self.y+direction) == 0):
-            moves.append(self.get_move(board, self.x, self.y + direction))
+            mMove = self.get_move(board, self.x, self.y + direction)
+            if self.check4alignment(board, mMove) and self.checkTransposition(board, mMove):
+                moves.append(mMove)
 
         if (board.get_piece(self.x+1, self.y+direction) == 0):
-            moves.append(self.get_move(board, self.x+1, self.y + direction))
+            mMove = self.get_move(board, self.x+1, self.y + direction)
+            if self.check4alignment(board, mMove) and self.checkTransposition(board, mMove):
+                moves.append(mMove)
             
         if (board.get_piece(self.x-1, self.y+direction) == 0):
-            moves.append(self.get_move(board, self.x-1, self.y + direction))
+            mMove = self.get_move(board, self.x-1, self.y + direction)
+            if self.check4alignment(board, mMove) and self.checkTransposition(board, mMove):
+                moves.append(mMove)
+        if (board.get_piece(self.x+1, self.y) == 0) and self.y != ref:
+            mMove = self.get_move(board, self.x+1, self.y)
+            if self.check4alignment(board, mMove) and self.checkTransposition(board, mMove):
+                moves.append(mMove)
+        if (board.get_piece(self.x-1, self.y) == 0) and self.y != ref:
+            mMove = self.get_move(board, self.x-1, self.y)
+            if self.check4alignment(board, mMove) and self.checkTransposition(board, mMove):
+                moves.append(mMove)
+
         if (self.y-direction != ref):    
             if (board.get_piece(self.x, self.y-direction) == 0):
-                moves.append(self.get_move(board, self.x, self.y - direction))            
+                mMove = self.get_move(board, self.x, self.y - direction)
+                if self.check4alignment(board, mMove) and self.checkTransposition(board, mMove):
+                    moves.append(mMove)       
 
             if (board.get_piece(self.x+1, self.y-direction) == 0):
-                moves.append(self.get_move(board, self.x+1, self.y - direction)) 
+                mMove = self.get_move(board, self.x+1, self.y - direction)
+                if self.check4alignment(board, mMove) and self.checkTransposition(board, mMove):
+                    moves.append(mMove)
 
             if (board.get_piece(self.x-1, self.y-direction) == 0):
-                moves.append(self.get_move(board, self.x-1, self.y - direction))             
+                mMove = self.get_move(board, self.x-1, self.y - direction)
+                if self.check4alignment(board, mMove) and self.checkTransposition(board, mMove):
+                    moves.append(mMove)           
             
         return self.remove_null_from_list(moves)   
          

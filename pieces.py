@@ -171,7 +171,7 @@ class Sphere(Piece):
         else:
             count = 1
 
-        for i in range(0, 6):
+        for i in range(1, 6):
             if x + i < 7 and y + i < 7:
                 piece = board.get_piece(x+i, y+i)
                 if (piece != 0):
@@ -189,7 +189,7 @@ class Sphere(Piece):
         else:
             count = 1
 
-        for i in range(0, 6):
+        for i in range(1, 6):
             if x - i >= 0 and y + i < 7:
                 piece = board.get_piece(x-i, y+i)
                 if (piece != 0):

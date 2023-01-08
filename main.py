@@ -46,27 +46,46 @@ def get_user_move():
 
 # Returns a valid move based on the users input.
 def get_valid_user_move(board):
-    while True:
-        move = get_user_move()
-        if move == 'Q':
-            return move
-        valid = False
-        possible_moves = board.get_possible_moves(pieces.Piece.PURPLE)
-        # No possible moves
-        if (not possible_moves):
-            return 0
+    move = get_user_move()
+    if move == 'Q':
+        return move
+    valid = False
+    possible_moves = board.get_possible_moves(pieces.Piece.PURPLE)
+    # No possible moves
+    if (not possible_moves):
+        return 0
 
-        for possible_move in possible_moves:
-            if (move.equals(possible_move)):
-                move.castling_move = possible_move.castling_move
-                valid = True
-                break
-
-        if (valid):
+    for possible_move in possible_moves:
+        if (move.equals(possible_move)):
+            valid = True
             break
-        else:
-            print("Invalid move.")
-    return move
+
+    if (valid):
+        return move
+    else:
+        print("Invalid move.")
+        return get_valid_user_move2(board,possible_moves)
+    
+    
+def get_valid_user_move2(board,possible_moves):
+    move = get_user_move()
+    if move == 'Q':
+        return move
+    valid = False
+    # No possible moves
+    if (not possible_moves):
+        return 0
+
+    for possible_move in possible_moves:
+        if (move.equals(possible_move)):
+            valid = True
+            break
+
+    if (valid):
+        return move
+    else:
+        print("Invalid move.")
+        return get_valid_user_move(board,possible_moves)
 
 # Converts a letter (A-H) to the x position on the chess board.
 def letter_to_xpos(letter):
@@ -127,6 +146,7 @@ if game_type == '0':
     
         board.perform_move(ai_move)
         print("AI move: " + ai_move.to_string())
+        print("RP = ", board.RPeated, "PP = ", board.PPeated)
         print(board.to_string())
         
 elif game_type == '1':

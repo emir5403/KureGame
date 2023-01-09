@@ -85,7 +85,7 @@ def get_valid_user_move2(board,possible_moves):
         return move
     else:
         print("Invalid move.")
-        return get_valid_user_move(board,possible_moves)
+        return get_valid_user_move2(board,possible_moves)
 
 # Converts a letter (A-H) to the x position on the chess board.
 def letter_to_xpos(letter):
@@ -149,6 +149,13 @@ if game_type == '0':
         print("RP = ", board.RPeated, "PP = ", board.PPeated)
         print(board.to_string())
         
+        if board.PPeated >= 4 :
+            print("Game Over. RED Wins.")
+            break
+        elif board.RPeated >= 4 :
+            print("Game Over. PURPLE Wins.")
+            break
+        
 elif game_type == '1':
     
      print("Computer vs Computer.")
@@ -189,6 +196,13 @@ elif game_type == '1':
              print("alfa-beta AI move: " + ai_move2.to_string())
              print("RP = ", board.RPeated, "PP = ", board.PPeated)
              print(board.to_string())
+             if board.PPeated >= 4 :
+                 print("Game Over. RED Wins.")
+                 break
+             elif board.RPeated >= 4 :
+                 print("Game Over. PURPLE Wins.")
+                 break
+             
          elif inp == 'Q':
              print("QUIT") 
              break
